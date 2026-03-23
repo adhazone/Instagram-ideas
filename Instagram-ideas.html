@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspi Board – EduContent ✏️</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --indigo: #5C6EFF;
+    --violet: #9B5CFF;
+    --cyan: #00C9C8;
+    --yellow: #FFD43B;
+    --coral: #FF6B6B;
+    --green: #2ECC71;
+    --mint: #C8F5E0;
+    --lavender: #EEE8FF;
+    --cream: #FFFBF0;
+    --text: #1A1A2E;
+    --muted: #8A8AAA;
+    --radius: 18px;
+    --card-shadow: 0 4px 24px rgba(92,110,255,0.10);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #F4F3FF;
+    min-height: 100vh;
+    color: var(--text);
+    background-image:
+      radial-gradient(ellipse at 0% 0%, #5C6EFF18 0%, transparent 55%),
+      radial-gradient(ellipse at 100% 100%, #9B5CFF18 0%, transparent 55%),
+      radial-gradient(ellipse at 60% 20%, #00C9C815 0%, transparent 40%);
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--indigo) 0%, var(--violet) 100%);
+    padding: 40px 24px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+  header .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 50px;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+  }
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.4rem;
+    color: white;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+  }
+  header h1 span { color: var(--yellow); }
+  header p {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.95rem;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 24px 20px 0;
+  }
+  .stat-card {
+    background: white;
+    border-radius: 14px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--card-shadow);
+    min-width: 120px;
+  }
+  .stat-icon { font-size: 1.5rem; }
+  .stat-info { display: flex; flex-direction: column; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; line-height: 1; }
+  .stat-label { font-size: 0.72rem; color: var(--muted); font-weight: 600; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-card.s-all    .stat-num { color: var(--indigo); }
+  .stat-card.s-draft  .stat-num { color: var(--coral); }
+  .stat-card.s-ready  .stat-num { color: var(--cyan); }
+  .stat-card.s-posted .stat-num { color: var(--green); }
+
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 28px 20px 80px;
+  }
+
+  .add-form {
+    background: white;
+    border-radius: var(--radius);
+    padding: 26px;
+    margin-bottom: 26px;
+    box-shadow: var(--card-shadow);
+    border: 2px solid transparent;
+    transition: border-color 0.25s;
+  }
+  .add-form:focus-within { border-color: var(--indigo); }
+  .form-head {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    color: var(--indigo);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .form-head::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, #5C6EFF33, transparent);
+    border-radius: 2px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  @media (max-width: 620px) { .form-grid { grid-template-columns: 1fr; } }
+
+  .form-grid input, .form-grid select {
+    border: 2px solid #EEEEF8;
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    background: #FAFAFE;
+    color: var(--text);
+    width: 100%;
+  }
+  .form-grid input:focus, .form-grid select:focus {
+    border-color: var(--indigo);
+    background: white;
+  }
+
+  .form-notes textarea {
+    width: 100%;
+    border: 2px solid #EEEEF8;
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    outline: none;
+    resize: vertical;
+    min-height: 72px;
+    transition: border-color 0.2s;
+    background: #FAFAFE;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .form-notes textarea:focus { border-color: var(--indigo); background: white; }
+
+  .form-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--indigo), var(--violet));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 26px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(92,110,255,0.35);
+    letter-spacing: 0.3px;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(92,110,255,0.45); }
+  .btn-primary:active { transform: scale(0.97); }
+
+  .hint { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    align-items: center;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+  }
+  .search-wrap input {
+    width: 100%;
+    border: 2px solid #EEEEF8;
+    border-radius: 12px;
+    padding: 10px 14px 10px 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    outline: none;
+    transition: border-color 0.2s;
+    background: white;
+  }
+  .search-wrap input:focus { border-color: var(--indigo); }
+  .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 1rem; color: #bbb; }
+
+  .filter-btn {
+    padding: 9px 16px;
+    border-radius: 50px;
+    border: 2px solid #EEEEF8;
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .filter-btn:hover { border-color: var(--indigo); color: var(--indigo); }
+  .filter-btn.active { background: var(--indigo); color: white; border-color: var(--indigo); }
+
+  .cat-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .cat-chip {
+    padding: 6px 14px;
+    border-radius: 50px;
+    border: 2px solid;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+  }
+  .cat-chip.active { color: white !important; }
+
+  .cc-all        { border-color: #5C6EFF88; color: var(--indigo); background: #EEF0FF; }
+  .cc-all.active { background: var(--indigo); }
+  .cc-Tips        { border-color: #FFD43B88; color: #B8860B; background: #FFFBE5; }
+  .cc-Tips.active { background: #FFD43B; color: #333 !important; }
+  .cc-Tutorial    { border-color: #5C6EFF88; color: var(--indigo); background: #EEF0FF; }
+  .cc-Tutorial.active { background: var(--indigo); }
+  .cc-Motivasi    { border-color: #FF6B6B88; color: #c0392b; background: #FFF0F0; }
+  .cc-Motivasi.active { background: var(--coral); }
+  .cc-Infografis  { border-color: #00C9C888; color: #008B8B; background: #E5FFFF; }
+  .cc-Infografis.active { background: var(--cyan); }
+  .cc-Review      { border-color: #9B5CFF88; color: var(--violet); background: var(--lavender); }
+  .cc-Review.active { background: var(--violet); }
+  .cc-Tren        { border-color: #2ECC7188; color: #1a8a4a; background: #EAFAF1; }
+  .cc-Tren.active { background: var(--green); }
+  .cc-QnA         { border-color: #FF6B9D88; color: #c0246e; background: #FFF0F7; }
+  .cc-QnA.active  { background: #FF6B9D; }
+  .cc-Lainnya     { border-color: #aaa8; color: #777; background: #F5F5F5; }
+  .cc-Lainnya.active { background: #aaa; }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+  }
+
+  .card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    transition: transform 0.22s, box-shadow 0.22s;
+    border-left: 5px solid #eee;
+    animation: popIn 0.28s cubic-bezier(.23,1.2,.32,1) both;
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.9) translateY(12px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(92,110,255,0.15); }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    line-height: 1.35;
+    flex: 1;
+    color: var(--text);
+  }
+  .btn-del {
+    background: none; border: none; cursor: pointer;
+    font-size: 0.95rem; opacity: 0.3; transition: opacity 0.2s, transform 0.2s;
+    padding: 2px 4px; border-radius: 6px; line-height: 1;
+  }
+  .btn-del:hover { opacity: 1; transform: scale(1.25); }
+
+  .card-notes {
+    font-size: 0.85rem;
+    color: #7777AA;
+    line-height: 1.55;
+    margin-bottom: 14px;
+    white-space: pre-line;
+  }
+
+  .card-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .cat-badge {
+    font-size: 0.73rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 50px;
+    letter-spacing: 0.3px;
+  }
+
+  .status-sel {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 8px;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.2s;
+  }
+  .ss-draft  { background: #FFF0ED; color: var(--coral); }
+  .ss-ready  { background: #E0FAFA; color: var(--cyan); }
+  .ss-posted { background: #E8FAF0; color: var(--green); }
+
+  .card-date { font-size: 0.7rem; color: #ccc; margin-top: 10px; }
+
+  .bl-Tips       { border-left-color: #FFD43B; }
+  .bl-Tutorial   { border-left-color: var(--indigo); }
+  .bl-Motivasi   { border-left-color: var(--coral); }
+  .bl-Infografis { border-left-color: var(--cyan); }
+  .bl-Review     { border-left-color: var(--violet); }
+  .bl-Tren       { border-left-color: var(--green); }
+  .bl-QnA        { border-left-color: #FF6B9D; }
+  .bl-Lainnya    { border-left-color: #aaa; }
+
+  .cb-Tips       { background: #FFF8D6; color: #9A7000; }
+  .cb-Tutorial   { background: #EDEFFF; color: var(--indigo); }
+  .cb-Motivasi   { background: #FFEDED; color: var(--coral); }
+  .cb-Infografis { background: #DFFFFF; color: #007878; }
+  .cb-Review     { background: var(--lavender); color: var(--violet); }
+  .cb-Tren       { background: var(--mint); color: #156A3A; }
+  .cb-QnA        { background: #FFEEF5; color: #B52070; }
+  .cb-Lainnya    { background: #F0F0F0; color: #888; }
+
+  .empty {
+    text-align: center; padding: 70px 20px;
+    grid-column: 1 / -1;
+  }
+  .empty .e-icon { font-size: 3.5rem; margin-bottom: 14px; }
+  .empty h3 { font-family: 'Syne', sans-serif; font-size: 1.4rem; color: var(--indigo); }
+  .empty p  { color: var(--muted); font-size: 0.9rem; margin-top: 8px; }
+
+  .toast {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--text); color: white;
+    padding: 12px 24px; border-radius: 50px;
+    font-size: 0.88rem; font-weight: 600;
+    z-index: 999; transition: transform 0.3s ease;
+    white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #EEEEF8;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">📱 Instagram Content Planner · Edukasi & Teknologi</div>
+  <h1>Inspi<span>Board</span> ✏️</h1>
+  <p>Kelola ide konten edukasimu — dari mahasiswa, untuk mahasiswa 🎓</p>
+</header>
+
+<div class="stats-row">
+  <div class="stat-card s-all">
+    <div class="stat-icon">💡</div>
+    <div class="stat-info">
+      <span class="stat-num" id="cnt-all">0</span>
+      <span class="stat-label">Total Ide</span>
+    </div>
+  </div>
+  <div class="stat-card s-draft">
+    <div class="stat-icon">✏️</div>
+    <div class="stat-info">
+      <span class="stat-num" id="cnt-draft">0</span>
+      <span class="stat-label">Draft</span>
+    </div>
+  </div>
+  <div class="stat-card s-ready">
+    <div class="stat-icon">🚀</div>
+    <div class="stat-info">
+      <span class="stat-num" id="cnt-ready">0</span>
+      <span class="stat-label">Siap Post</span>
+    </div>
+  </div>
+  <div class="stat-card s-posted">
+    <div class="stat-icon">✅</div>
+    <div class="stat-info">
+      <span class="stat-num" id="cnt-posted">0</span>
+      <span class="stat-label">Sudah Post</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="add-form">
+    <div class="form-head">✨ Tambah Ide Konten</div>
+    <div class="form-grid">
+      <input type="text" id="inp-title" placeholder="Judul, misal: '5 Cara Belajar Lebih Efektif'" />
+      <select id="inp-cat">
+        <option value="Tips">💡 Tips Belajar</option>
+        <option value="Tutorial">🎓 Tutorial</option>
+        <option value="Motivasi">🔥 Motivasi Mahasiswa</option>
+        <option value="Infografis">📊 Infografis</option>
+        <option value="Review">⭐ Review (App / Buku / Tools)</option>
+        <option value="Tren">📈 Tren Pendidikan & Teknologi</option>
+        <option value="QnA">❓ Q&A / Mitos vs Fakta</option>
+        <option value="Lainnya">📌 Lainnya</option>
+      </select>
+      <select id="inp-status">
+        <option value="draft">✏️ Draft</option>
+        <option value="ready">🚀 Siap Post</option>
+        <option value="posted">✅ Sudah Post</option>
+      </select>
+    </div>
+    <div class="form-notes">
+      <textarea id="inp-notes" placeholder="Catatan: angle konten, referensi, caption ideas, hashtag, target pain point mahasiswa..."></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" onclick="addIdea()">+ Simpan Ide</button>
+      <span class="hint">atau tekan Enter ↵ di kolom judul</span>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-inp" placeholder="Cari ide konten..." oninput="render()" />
+    </div>
+    <button class="filter-btn active" data-s="all"    onclick="setStatus(this)">Semua</button>
+    <button class="filter-btn"        data-s="draft"  onclick="setStatus(this)">✏️ Draft</button>
+    <button class="filter-btn"        data-s="ready"  onclick="setStatus(this)">🚀 Siap Post</button>
+    <button class="filter-btn"        data-s="posted" onclick="setStatus(this)">✅ Sudah Post</button>
+  </div>
+
+  <div class="cat-row">
+    <button class="cat-chip cc-all active"   data-c="all"        onclick="setCat(this)">🌈 Semua</button>
+    <button class="cat-chip cc-Tips"         data-c="Tips"       onclick="setCat(this)">💡 Tips Belajar</button>
+    <button class="cat-chip cc-Tutorial"     data-c="Tutorial"   onclick="setCat(this)">🎓 Tutorial</button>
+    <button class="cat-chip cc-Motivasi"     data-c="Motivasi"   onclick="setCat(this)">🔥 Motivasi</button>
+    <button class="cat-chip cc-Infografis"   data-c="Infografis" onclick="setCat(this)">📊 Infografis</button>
+    <button class="cat-chip cc-Review"       data-c="Review"     onclick="setCat(this)">⭐ Review</button>
+    <button class="cat-chip cc-Tren"         data-c="Tren"       onclick="setCat(this)">📈 Tren</button>
+    <button class="cat-chip cc-QnA"          data-c="QnA"        onclick="setCat(this)">❓ Q&A</button>
+    <button class="cat-chip cc-Lainnya"      data-c="Lainnya"    onclick="setCat(this)">📌 Lainnya</button>
+  </div>
+
+  <div class="section-label" id="result-label">Semua Ide</div>
+  <div class="cards-grid" id="cards-grid"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY = 'inspiboard_edu_v2';
+let ideas = [];
+let fStatus = 'all', fCat = 'all';
+
+const catEmoji = { Tips:'💡', Tutorial:'🎓', Motivasi:'🔥', Infografis:'📊', Review:'⭐', Tren:'📈', QnA:'❓', Lainnya:'📌' };
+const catLabel = { Tips:'Tips Belajar', Tutorial:'Tutorial', Motivasi:'Motivasi', Infografis:'Infografis', Review:'Review', Tren:'Tren', QnA:'Q&A', Lainnya:'Lainnya' };
+
+function load() { try { ideas = JSON.parse(localStorage.getItem(KEY)) || []; } catch { ideas = []; } }
+function save() { localStorage.setItem(KEY, JSON.stringify(ideas)); }
+
+function addIdea() {
+  const title = document.getElementById('inp-title').value.trim();
+  if (!title) { showToast('⚠️ Judul ide tidak boleh kosong!'); return; }
+  ideas.unshift({
+    id: Date.now(),
+    title,
+    notes: document.getElementById('inp-notes').value.trim(),
+    category: document.getElementById('inp-cat').value,
+    status: document.getElementById('inp-status').value,
+    date: new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' })
+  });
+  save();
+  document.getElementById('inp-title').value = '';
+  document.getElementById('inp-notes').value = '';
+  render(); updateStats();
+  showToast('💡 Ide berhasil disimpan!');
+}
+
+function deleteIdea(id) {
+  ideas = ideas.filter(i => i.id !== id);
+  save(); render(); updateStats();
+  showToast('🗑️ Ide dihapus');
+}
+
+function changeStatus(id, val) {
+  const idea = ideas.find(i => i.id === id);
+  if (idea) { idea.status = val; save(); updateStats(); }
+}
+
+function setStatus(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  fStatus = btn.dataset.s;
+  render();
+}
+
+function setCat(btn) {
+  document.querySelectorAll('.cat-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  fCat = btn.dataset.c;
+  render();
+}
+
+function render() {
+  const q = document.getElementById('search-inp').value.toLowerCase();
+  const grid = document.getElementById('cards-grid');
+  const label = document.getElementById('result-label');
+
+  let list = ideas.filter(i => {
+    const ms = fStatus === 'all' || i.status === fStatus;
+    const mc = fCat === 'all' || i.category === fCat;
+    const mq = !q || i.title.toLowerCase().includes(q) || (i.notes && i.notes.toLowerCase().includes(q));
+    return ms && mc && mq;
+  });
+
+  const statusMap = { all:'Semua Ide', draft:'Draft', ready:'Siap Post', posted:'Sudah Post' };
+  label.textContent = `${statusMap[fStatus]}${fCat !== 'all' ? ' · ' + catLabel[fCat] : ''} (${list.length})`;
+
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty"><div class="e-icon">📭</div><h3>Belum ada ide di sini</h3><p>Tambahkan ide konten edukasimu di atas 💡</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(i => `
+    <div class="card bl-${i.category}">
+      <div class="card-top">
+        <div class="card-title">${esc(i.title)}</div>
+        <button class="btn-del" onclick="deleteIdea(${i.id})" title="Hapus ide">🗑️</button>
+      </div>
+      ${i.notes ? `<div class="card-notes">${esc(i.notes)}</div>` : ''}
+      <div class="card-foot">
+        <span class="cat-badge cb-${i.category}">${catEmoji[i.category]} ${catLabel[i.category]}</span>
+        <select class="status-sel ss-${i.status}" data-id="${i.id}" onchange="handleStatusChange(this)">
+          <option value="draft"  ${i.status==='draft' ?'selected':''}>✏️ Draft</option>
+          <option value="ready"  ${i.status==='ready' ?'selected':''}>🚀 Siap Post</option>
+          <option value="posted" ${i.status==='posted'?'selected':''}>✅ Sudah Post</option>
+        </select>
+      </div>
+      <div class="card-date">📅 ${i.date}</div>
+    </div>
+  `).join('');
+}
+
+function handleStatusChange(sel) {
+  sel.className = `status-sel ss-${sel.value}`;
+  changeStatus(parseInt(sel.dataset.id), sel.value);
+}
+
+function updateStats() {
+  document.getElementById('cnt-all').textContent = ideas.length;
+  document.getElementById('cnt-draft').textContent = ideas.filter(i=>i.status==='draft').length;
+  document.getElementById('cnt-ready').textContent = ideas.filter(i=>i.status==='ready').length;
+  document.getElementById('cnt-posted').textContent = ideas.filter(i=>i.status==='posted').length;
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let toastT;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 2300);
+}
+
+document.getElementById('inp-title').addEventListener('keydown', e => { if(e.key==='Enter') addIdea(); });
+load(); render(); updateStats();
+</script>
+</body>
+</html>
